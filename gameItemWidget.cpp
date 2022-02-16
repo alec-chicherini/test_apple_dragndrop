@@ -8,14 +8,15 @@
 #include <QDataStream>
 #include <QByteArray>
 
-gameItemWidget::gameItemWidget(QWidget* parent) :
-	QWidget(parent),
-	isInfinite(false)
-{
-	item.insert(NAME, QString(""));
-	item.insert(IMAGE, QString("S:/Code/test_apple_dragndrop/images/empty-icon.png"));
-	item.insert(COUNT, 0);
+#include "gameDB.h"
 
+gameItemWidget::gameItemWidget(QWidget* parent, int row_, int column_, QJsonArray item_) :
+	QWidget(parent),
+	isInfinite(false),
+	row(row_),
+	column(column_),
+	item(item_)
+{
 	count = new QLabel(this);
 	count->setText(QString::number(item[COUNT].toInt()));
 
@@ -72,6 +73,7 @@ void gameItemWidget::dropEvent(QDropEvent* event)
 	if (recivedItem[NAME] == item[NAME])
 	{
 		item[COUNT] = recivedItem[COUNT].toInt() + item[COUNT].toInt();
+		gameDB::set(item,row, column);
 		if(!sender->getInfinite())
 			sender->setEmpty();
 	}
@@ -79,6 +81,7 @@ void gameItemWidget::dropEvent(QDropEvent* event)
 	{
 		count->show();
 		item = recivedItem;
+		gameDB::set(item, row, column);
 		if (!sender->getInfinite())
 			 sender->setEmpty();
 	}
@@ -135,4 +138,5 @@ void gameItemWidget::setEmpty()
 	item[IMAGE] = QString("S:/Code/test_apple_dragndrop/images/empty-icon.png");
 	item[NAME] = QString("");
 	update();
+	gameDB::set(item, row, column);
 }

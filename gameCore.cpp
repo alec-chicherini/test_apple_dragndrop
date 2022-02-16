@@ -1,11 +1,21 @@
 #include "gameCore.h"
 #include <QDebug>
+
+#include <QtSql>
+#include <QSqlDatabase>
+#include <QSqlQuery>
+#include <QMessageBox>
+
+#include "gameDB.h"
+
 gameWidget*   gameCore::game = nullptr;
 gameMainMenu* gameCore::menu = nullptr;
 
 gameCore::gameCore(QObject* parent) :
 	QObject(parent)
 {
+	gameDB::initDB();
+
 	menu = new gameMainMenu();
 	menu->show();
 }

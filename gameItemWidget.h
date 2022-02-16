@@ -10,13 +10,15 @@ class gameItemWidget : public QWidget
 {
 	
 public:
-	gameItemWidget(QWidget* parent);
+	gameItemWidget(QWidget* parent,int row, int column, QJsonArray item);
 
 private:
 	QLabel * count;
 	QLabel * image;
 	QJsonArray item;
 	bool isInfinite;
+	int column;
+	int row;
 
 private slots:
 	void update();

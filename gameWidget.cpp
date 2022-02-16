@@ -16,25 +16,23 @@ gameWidget::gameWidget(QWidget* parent) :
 	table(new gameInventory(3, 3, this)),
 	single(new gameInventory(1, 1, this))
 {
-	gameDB db;
-	qDebug() << "db.checkDBTables() = " << db.checkDBTables();
+	qDebug() << " gameDB::checkDBTables() = " << gameDB::checkDBTables();
 
 	/// TODO::refactor access to DB in model-view style
-	if  ( db.checkDBTables())
+	
+	///init table
+	if (! gameDB::checkDBTables())
 	{
-		for (int row = 0; row < table->rowCount(); row++)
-			for (int column = 0; column < table->columnCount(); column++)
-				table->setItem(db.get(row, column), row, column);
-			
+		gameDB::initDBTables();
+		gameDB::fillDBTables();
 	}
-	else
-	{
-		db.initDBTables();
-		table->fillInventory();
-		for (int row = 0; row < table->rowCount(); row++)
-			for (int column = 0; column < table->columnCount(); column++)
-				db.set(table->getItem(row, column)->getItem(), row, column);
-	}
+
+	for (int row = 0; row < table->rowCount(); row++)
+		for (int column = 0; column < table->columnCount(); column++)
+			table->setItem(gameDB::get(row, column), row, column);
+	///
+
+	/// init single 
 	QJsonArray test_item;
 	
 	test_item.insert(NAME, QString("Apple"));
@@ -43,6 +41,7 @@ gameWidget::gameWidget(QWidget* parent) :
 
 	single->fillInventory(test_item);
 	single->getItem(0, 0)->setInfinite(true);
+	///
 	
 	QPushButton* btnMainMenu = new QPushButton(tr("Главное меню"), this);
 	QGridLayout* layout = new QGridLayout();
