@@ -11,6 +11,7 @@ Set CMAKE_PREFIX_PATH option to folder with Qt: `CMAKE_PREFIX_PATH="C:\Qt\6.2.2\
 
 ```sh
 git clone git@github.com:ikvasir/test_apple_dragndrop.git
+cd test_apple_dragndrop
 mkdir build
 cd build
 ```
