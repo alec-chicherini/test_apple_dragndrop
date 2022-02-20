@@ -21,7 +21,7 @@ gameItemWidget::gameItemWidget(QWidget* parent, int row_, int column_, QJsonArra
 	count->setText(QString::number(item[COUNT].toInt()));
 
 	image = new QLabel(this);
-	QPixmap iconImage(item[IMAGE].toString());
+	QPixmap iconImage(gameDB::getImage(item[IMAGE].toString()));
 	iconImage = iconImage.scaled(QSize(90, 90));
 	image->setPixmap(iconImage);
 
@@ -126,7 +126,7 @@ void gameItemWidget::update()
 {
 	count->setText(QString::number(item[COUNT].toInt()));
 
-	QPixmap iconImage(item[IMAGE].toString());
+	QPixmap iconImage(gameDB::getImage(item[IMAGE].toString()));
 	iconImage = iconImage.scaled(QSize(90, 90));
 	image->setPixmap(iconImage);
 }
@@ -135,7 +135,7 @@ void gameItemWidget::setEmpty()
 {
 	count->hide();
 	item[COUNT] = 0;
-	item[IMAGE] = QString("S:/Code/test_apple_dragndrop/images/empty-icon.png");
+	item[IMAGE] = QString("empty-icon.png");
 	item[NAME] = QString("");
 	update();
 	gameDB::set(item, row, column);

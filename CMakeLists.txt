@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.23)
+cmake_minimum_required(VERSION 3.22)
 project(test_apple_dragndrop)
 
 #C++ init
@@ -28,23 +28,39 @@ target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Sql)
 
 #post build actions
 set(FULL_PATH_TO_EXECUTABLE $<TARGET_FILE:${PROJECT_NAME}>)
+set(FULL_PATH_TO_EXECUTABLE_DIR $<TARGET_FILE_DIR:${PROJECT_NAME}>)
+set(IMAGES_DIR ${${PROJECT_NAME}_SOURCE_DIR}/images)
+
+#1
 message(" ### Add post build event : windeployqt.exe")
 add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E echo "POST_BUILD: Using windeployqt to copy all depends to executable path"
 	COMMAND ${CMAKE_PREFIX_PATH}/bin/windeployqt.exe 
-				${FULL_PATH_TO_EXECUTABLE}
-				--no-quick-import 
+			${FULL_PATH_TO_EXECUTABLE}
+			--no-quick-import 
 				--no-translations 
 )
 
+#2
+add_custom_command(
+	TARGET ${PROJECT_NAME} POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E echo "POST_BUILD:copy_directory ${IMAGES_DIR} to ${FULL_PATH_TO_EXECUTABLE_DIR}/images"
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${IMAGES_DIR} ${FULL_PATH_TO_EXECUTABLE_DIR}/images
+)
+
+#3
 #set(POST_BUILD_EXECUTION ON)
 if(POST_BUILD_EXECUTION)
 	message(" ### Add post build event : ./${PROJECT_NAME}.exe")
 	add_custom_command(
 		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E echo "POST_BUILD:Launch an app after build."
 		COMMAND ${FULL_PATH_TO_EXECUTABLE} 
+		
 	)
 endif()#POST_BUILD_EXECUTION
+
 #
 
 

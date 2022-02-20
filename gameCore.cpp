@@ -15,6 +15,12 @@ gameCore::gameCore(QObject* parent) :
 	QObject(parent)
 {
 	gameDB::initDB();
+	if (!gameDB::checkDBTables())
+	{
+		gameDB::initDBTables();
+		gameDB::fill_game_table();
+		gameDB::fill_resource_table();
+	}
 
 	menu = new gameMainMenu();
 	menu->show();

@@ -18,25 +18,15 @@ gameWidget::gameWidget(QWidget* parent) :
 {
 	qDebug() << " gameDB::checkDBTables() = " << gameDB::checkDBTables();
 
-	/// TODO::refactor access to DB in model-view style
-	
-	///init table
-	if (! gameDB::checkDBTables())
-	{
-		gameDB::initDBTables();
-		gameDB::fillDBTables();
-	}
-
 	for (int row = 0; row < table->rowCount(); row++)
 		for (int column = 0; column < table->columnCount(); column++)
 			table->setItem(gameDB::get(row, column), row, column);
-	///
 
 	/// init single 
 	QJsonArray test_item;
 	
 	test_item.insert(NAME, QString("Apple"));
-	test_item.insert(IMAGE, QString("S:/Code/test_apple_dragndrop/images/apple-icon.png"));
+	test_item.insert(IMAGE, QString("apple-icon.png"));
 	test_item.insert(COUNT, 1);
 
 	single->fillInventory(test_item);

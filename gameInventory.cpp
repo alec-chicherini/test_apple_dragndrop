@@ -10,7 +10,7 @@ gameInventory::gameInventory(int countRows_, int countColumns_, QWidget * parent
 	{
 			QJsonArray item;
 			item.insert(NAME, QString(""));
-			item.insert(IMAGE, QString("S:/Code/test_apple_dragndrop/images/empty-icon.png"));
+			item.insert(IMAGE, QString("empty-icon.png"));
 			item.insert(COUNT, 0);
 
 			setCellWidget(row, column, new gameItemWidget(this,row,column,item));
