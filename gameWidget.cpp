@@ -16,7 +16,6 @@ gameWidget::gameWidget(QWidget* parent) :
 	table(new gameInventory(3, 3, this)),
 	single(new gameInventory(1, 1, this))
 {
-	qDebug() << " gameDB::checkDBTables() = " << gameDB::checkDBTables();
 
 	for (int row = 0; row < table->rowCount(); row++)
 		for (int column = 0; column < table->columnCount(); column++)
@@ -35,9 +34,9 @@ gameWidget::gameWidget(QWidget* parent) :
 	
 	QPushButton* btnMainMenu = new QPushButton(tr("Главное меню"), this);
 	QGridLayout* layout = new QGridLayout();
-	layout->addWidget(table, 0, 0);
-	layout->addWidget(single, 0, 1);
-	layout->addWidget(btnMainMenu, 1, 0, 1, -1);
+	layout->addWidget(table, 1, 0);
+	layout->addWidget(single, 1, 1);
+	layout->addWidget(btnMainMenu, 0, 0, 1, -1);
 	setLayout(layout);
 
 	connect(btnMainMenu, &QPushButton::clicked, this, [&] {

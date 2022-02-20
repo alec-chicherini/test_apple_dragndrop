@@ -16,10 +16,6 @@ void gameDB::initDB()
             "\nlastError().driverText() = " + db.lastError().driverText() +
             "\n\nClick Cancel to exit.", QMessageBox::Cancel);
     }
-    else
-    {
-        qDebug() << "db oppened";
-    }
 }
 
 bool gameDB::checkDBTables()
@@ -33,11 +29,7 @@ void gameDB::initDBTables()
 {
     QSqlQuery query;
     query.exec(QLatin1String("create table game_table ( row_column varchar(10) primary key, name varchar(30), image varchar (100), count int) "));
-    qDebug() << "query.lastError() = " << query.lastError();
-
     query.exec("create table game_resource (imagename text, imagedata BLOB ) ");
-    qDebug() << "query.lastError() = " << query.lastError();
-    qDebug() << "DB initialised";
 }
 
 void gameDB::fill_game_table()

@@ -14,13 +14,16 @@ gameInventory::gameInventory(int countRows_, int countColumns_, QWidget * parent
 			item.insert(COUNT, 0);
 
 			setCellWidget(row, column, new gameItemWidget(this,row,column,item));
-			setSelectionMode(QAbstractItemView::SingleSelection);
+			
 	}
 	resizeColumnsToContents();
 	resizeRowsToContents();
 	horizontalHeader()->hide();
 	verticalHeader()->hide();
 	setSizeAdjustPolicy(QAbstractScrollArea::AdjustToContents);
+	setSelectionMode(QAbstractItemView::SelectionMode::NoSelection);
+	setCurrentCell(-1, -1);
+	
 }
 
 void gameInventory::fillInventory(QJsonArray item, int row, int column)

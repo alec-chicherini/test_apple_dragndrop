@@ -8,14 +8,23 @@ set(CMAKE_CXX_STANDART_REQUIRED ON)
 
 #Qt6 init
 function(init_qt6)
-	find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Core Sql)
+	find_package(Qt6 REQUIRED COMPONENTS Widgets Gui Core Sql Multimedia)
     set(CMAKE_AUTOMOC ON)
 	set(CMAKE_AUTORCC ON)
 	set(CMAKE_AUTOUIC ON)
 endfunction()
 
-#option(_QT_6_PATH "Set _QT_6_PATH like: ${WRONG_PATH_MESSAGE}" OFF)
-set(CMAKE_PREFIX_PATH "S:\\Code\\Qt\\6.2.2\\msvc2019_64")
+set(MESSAGE_GOOD_PATH "\"C:\\Qt\\6.2.2\\msvc2019_64\"")
+option(CMAKE_PREFIX_PATH "Set CMAKE_PREFIX_PATH like: ${MESSAGE_GOOD_PATH}" OFF)
+string(COMPARE EQUAL "${CMAKE_PREFIX_PATH}" "OFF" IS_QT_6_PATH_EMPTY)
+	if(IS_QT_6_PATH_EMPTY)
+                message(FATAL_ERROR "### CMAKE_PREFIX_PATH is empty! Set CMAKE_PREFIX_PATH on cmake.exe call like: 'cmake . -D CMAKE_PREFIX_PATH=${MESSAGE_GOOD_PATH}'")
+                return()
+	else()
+		message("### -D CMAKE_PREFIX_PATH is ${CMAKE_PREFIX_PATH}")
+	endif()
+
+#set(CMAKE_PREFIX_PATH "S:\\Code\\Qt\\6.2.2\\msvc2019_64")
 init_qt6()
 #
 
@@ -24,13 +33,13 @@ file(GLOB IN_PROJECT_CPP_FILES
      ${SOURCE_DIR}*.cpp *.h)
 message(" ### IN_PROJECT_CPP_FILES = ${IN_PROJECT_CPP_FILES}")
 add_executable(${PROJECT_NAME} ${IN_PROJECT_CPP_FILES})
-target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Sql)
+target_link_libraries(${PROJECT_NAME} Qt6::Widgets Qt6::Gui Qt6::Core Qt6::Sql Qt6::Multimedia)
 
-#post build actions
+#post build actions #1 #2 #3 #4
 set(FULL_PATH_TO_EXECUTABLE $<TARGET_FILE:${PROJECT_NAME}>)
 set(FULL_PATH_TO_EXECUTABLE_DIR $<TARGET_FILE_DIR:${PROJECT_NAME}>)
 set(IMAGES_DIR ${${PROJECT_NAME}_SOURCE_DIR}/images)
-
+set(SOUNDS_DIR ${${PROJECT_NAME}_SOURCE_DIR}/sounds)
 #1
 message(" ### Add post build event : windeployqt.exe")
 add_custom_command(
@@ -43,14 +52,29 @@ add_custom_command(
 )
 
 #2
+message(" ### Add post build event : copy source dirs")
 add_custom_command(
 	TARGET ${PROJECT_NAME} POST_BUILD
 	COMMAND ${CMAKE_COMMAND} -E echo "POST_BUILD:copy_directory ${IMAGES_DIR} to ${FULL_PATH_TO_EXECUTABLE_DIR}/images"
 	COMMAND ${CMAKE_COMMAND} -E copy_directory ${IMAGES_DIR} ${FULL_PATH_TO_EXECUTABLE_DIR}/images
+	COMMAND ${CMAKE_COMMAND} -E echo "POST_BUILD:copy_directory ${SOUNDS_DIR} to ${FULL_PATH_TO_EXECUTABLE_DIR}/sounds"
+	COMMAND ${CMAKE_COMMAND} -E copy_directory ${SOUNDS_DIR} ${FULL_PATH_TO_EXECUTABLE_DIR}/sounds
 )
 
 #3
-#set(POST_BUILD_EXECUTION ON)
+message(" ### Add post build event : make archive")
+set(POST_BUILD_ARCHIVE ON)
+if(POST_BUILD_ARCHIVE)
+	add_custom_command(
+		TARGET ${PROJECT_NAME} POST_BUILD
+		COMMAND ${CMAKE_COMMAND} -E echo "POST_BUILD:Making build folder archive."
+		COMMAND ${CMAKE_COMMAND} -E tar cJ build.xz.tar ${FULL_PATH_TO_EXECUTABLE_DIR}
+	)
+endif()#POST_BUILD_ARCHIVE
+
+#4
+message(" ### Add post build event :lauch app after build")
+set(POST_BUILD_EXECUTION ON)
 if(POST_BUILD_EXECUTION)
 	message(" ### Add post build event : ./${PROJECT_NAME}.exe")
 	add_custom_command(
@@ -60,8 +84,4 @@ if(POST_BUILD_EXECUTION)
 		
 	)
 endif()#POST_BUILD_EXECUTION
-
 #
-
-
-

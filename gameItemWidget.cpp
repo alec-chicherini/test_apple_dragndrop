@@ -8,6 +8,7 @@
 #include <QDataStream>
 #include <QByteArray>
 
+#include "gameSound.h"
 #include "gameDB.h"
 
 gameItemWidget::gameItemWidget(QWidget* parent, int row_, int column_, QJsonArray item_) :
@@ -21,6 +22,7 @@ gameItemWidget::gameItemWidget(QWidget* parent, int row_, int column_, QJsonArra
 	count->setText(QString::number(item[COUNT].toInt()));
 
 	image = new QLabel(this);
+
 	QPixmap iconImage(gameDB::getImage(item[IMAGE].toString()));
 	iconImage = iconImage.scaled(QSize(90, 90));
 	image->setPixmap(iconImage);
@@ -70,7 +72,11 @@ void gameItemWidget::dropEvent(QDropEvent* event)
 
 	gameItemWidget* sender = static_cast<gameItemWidget*>(event->source());
 
-	if (recivedItem[NAME] == item[NAME])
+	if(this == sender)
+	{
+		return;
+	}
+	else if (recivedItem[NAME] == item[NAME])
 	{
 		item[COUNT] = recivedItem[COUNT].toInt() + item[COUNT].toInt();
 		gameDB::set(item,row, column);
@@ -79,7 +85,6 @@ void gameItemWidget::dropEvent(QDropEvent* event)
 	}
 	else if (item[NAME].toString() == QString(""))
 	{
-		count->show();
 		item = recivedItem;
 		gameDB::set(item, row, column);
 		if (!sender->getInfinite())
@@ -119,11 +124,21 @@ void gameItemWidget::mousePressEvent(QMouseEvent* event)
 			setEmpty();
 		}
 		emit update();
+
+		gameSound::play("apple-crunch.wav");
+		QSoundEffect * effect = new QSoundEffect(qApp);
+		effect->setSource(QUrl::fromLocalFile(QCoreApplication::applicationDirPath()+"/sounds/apple-crunch.wav"));
+		effect->setVolume(1.0f);
+		effect->play();
+		
 	}
 }
 
 void gameItemWidget::update()
 {
+	if (item[COUNT].toInt() > 0)count->show();
+	else count->hide();
+
 	count->setText(QString::number(item[COUNT].toInt()));
 
 	QPixmap iconImage(gameDB::getImage(item[IMAGE].toString()));
@@ -133,7 +148,6 @@ void gameItemWidget::update()
 
 void gameItemWidget::setEmpty()
 {
-	count->hide();
 	item[COUNT] = 0;
 	item[IMAGE] = QString("empty-icon.png");
 	item[NAME] = QString("");
