@@ -1,7 +1,7 @@
 # test_apple_dragndrop
 Small test task for one famous company.
 
-##Requrements 
+## Requirements 
 - Windows 11
 - Qt6.2.2
 - CMake 3.22
