@@ -7,7 +7,7 @@ Small test task for one famous company.
 - CMake 3.22
 
 ## Build Windows 11
-Set CMAKE_PREFIX_PATH option to folder with choosen compiler. (`cmake .. -D CMAKE_PREFIX_PATH="C:\Qt\6.2.2\msvc2019_64`")
+Set CMAKE_PREFIX_PATH option to folder with Qt: `CMAKE_PREFIX_PATH="C:\Qt\6.2.2\msvc2019_64`
 
 ```sh
 git clone git@github.com:ikvasir/test_apple_dragndrop.git
@@ -21,8 +21,8 @@ cmake .. -D CMAKE_PREFIX_PATH="C:\Qt\6.2.2\msvc2019_64"
 cmake --build .
 ```
 
-##Last build
-
+## Last build
+[build.xz.tar](https://github.com/ikvasir/test_apple_dragndrop/releases/tag/v1.0.0)
 
 ## How it ran on my pc
-[Video here](https://www.youtube.com/)
+[Video here](https://youtu.be/q0VohpK6WbA)
