@@ -63,7 +63,7 @@ add_custom_command(
 
 #3
 message(" ### Add post build event : make archive")
-set(POST_BUILD_ARCHIVE ON)
+set(POST_BUILD_ARCHIVE OFF)
 if(POST_BUILD_ARCHIVE)
 	add_custom_command(
 		TARGET ${PROJECT_NAME} POST_BUILD
